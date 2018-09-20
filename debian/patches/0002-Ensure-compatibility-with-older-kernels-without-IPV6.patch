@@ -1,4 +1,4 @@
-From 6c38e2beee3bd23baf2fa1f3642fab9ebad9164d Mon Sep 17 00:00:00 2001
+From 9ef1082517987ff0a75bd121d58ed0648b3407cb Mon Sep 17 00:00:00 2001
 From: Vincent Bernat <vincent@bernat.im>
 Date: Wed, 1 Aug 2018 23:04:52 +0200
 Subject: [PATCH 2/2] Ensure compatibility with older kernels without
@@ -62,7 +62,7 @@ index d422460756ab..65b89667d6c6 100644
  }
  
 diff --git a/src/iface.h b/src/iface.h
-index 58052a06b886..7a791ed84de8 100644
+index e9148775d88a..b09cf762a540 100644
 --- a/src/iface.h
 +++ b/src/iface.h
 @@ -94,6 +94,9 @@ private:

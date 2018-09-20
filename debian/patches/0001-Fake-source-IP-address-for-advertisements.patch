@@ -1,4 +1,4 @@
-From 44bdfa417e88c1f7b340aea35f3580d92b31fa1d Mon Sep 17 00:00:00 2001
+From f3e7df3b84a683acbfc9b207f79b372be6953cd9 Mon Sep 17 00:00:00 2001
 From: Vincent Bernat <vincent@bernat.im>
 Date: Wed, 25 Jul 2018 08:12:40 +0200
 Subject: [PATCH 1/2] Fake source IP address for advertisements
@@ -124,7 +124,7 @@ index 1639a679fc64..d422460756ab 100644
  }
  
 diff --git a/src/iface.h b/src/iface.h
-index efdd1ac68387..58052a06b886 100644
+index efdd1ac68387..e9148775d88a 100644
 --- a/src/iface.h
 +++ b/src/iface.h
 @@ -44,7 +44,7 @@ public:
@@ -132,7 +132,7 @@ index efdd1ac68387..58052a06b886 100644
      static ssize_t read(int fd, struct sockaddr* saddr, uint8_t* msg, size_t size);
  
 -    static ssize_t write(int fd, const address& daddr, const uint8_t* msg, size_t size);
-+    static ssize_t write(int fd, const address* saddr, const address& daddr, const uint8_t* msg, size_t size);
++    ssize_t write(int fd, const address* saddr, const address& daddr, const uint8_t* msg, size_t size);
  
      // Writes a NB_NEIGHBOR_SOLICIT message to the _ifd socket.
      ssize_t write_solicit(const address& taddr);
