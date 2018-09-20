@@ -1,0 +1,38 @@
+ndppd (0.2.5-3) unstable; urgency=medium
+
+  * Added dependency on lsb-base, thanks lintian.
+
+ -- Jean-Michel Vourgère <nirgal@debian.org>  Mon, 24 Oct 2016 23:57:20 +0200
+
+ndppd (0.2.5-2) unstable; urgency=medium
+
+  * Drop ndppd-dbg package.
+
+ -- Jean-Michel Vourgère <nirgal@debian.org>  Thu, 21 Apr 2016 03:07:21 +0200
+
+ndppd (0.2.5-1) unstable; urgency=medium
+
+  * New upstream version:
+    - Fixed FTBFS with GCC 6. (Closes: #811756)
+    - Fixed need to have interface in promiscuous mode.
+  * Enabled all compilation hardening.
+  * Switched to automatic debug symbols system. ndppd-dbg is now a
+    transitionnal package.
+  * d/control: Switched Vcs-Git to a secure URL.
+  * Bumped policy to 3.9.8: No change required.
+
+ -- Jean-Michel Vourgère <nirgal@debian.org>  Mon, 18 Apr 2016 22:33:13 +0200
+
+ndppd (0.2.4-1) unstable; urgency=medium
+
+  * New upstream version.
+  * New ndppd-dbg package with the debug symbols.
+  * Added Multi-Arch specifications.
+
+ -- Jean-Michel Vourgère <nirgal@debian.org>  Tue, 13 Oct 2015 14:44:25 +0200
+
+ndppd (0.2.3-2) unstable; urgency=medium
+
+  * Initial upload. (Closes: #644932)
+
+ -- Jean-Michel Vourgère <nirgal@debian.org>  Sat, 10 Oct 2015 23:09:50 +0200
