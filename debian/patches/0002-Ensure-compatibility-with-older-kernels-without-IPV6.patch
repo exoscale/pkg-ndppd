@@ -1,0 +1,80 @@
+From 6c38e2beee3bd23baf2fa1f3642fab9ebad9164d Mon Sep 17 00:00:00 2001
+From: Vincent Bernat <vincent@bernat.im>
+Date: Wed, 1 Aug 2018 23:04:52 +0200
+Subject: [PATCH 2/2] Ensure compatibility with older kernels without
+ IPV6_FREEBIND
+
+If this option is not available, just don't spoof the source IP
+address when doing neighbor advertisements.
+---
+ src/iface.cc | 16 +++++++++++-----
+ src/iface.h  |  3 +++
+ 2 files changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/src/iface.cc b/src/iface.cc
+index d422460756ab..65b89667d6c6 100644
+--- a/src/iface.cc
++++ b/src/iface.cc
+@@ -49,7 +49,7 @@ bool iface::_map_dirty = false;
+ std::vector<struct pollfd> iface::_pollfds;
+ 
+ iface::iface() :
+-    _ifd(-1), _pfd(-1), _name("")
++    _ifd(-1), _pfd(-1), _spoof(false), _name("")
+ {
+ }
+ 
+@@ -210,11 +210,16 @@ ptr<iface> iface::open_ifd(const std::string& name)
+ 
+     // Enable to send with any address (needs Linux 4.15+)
+     int one = 1;
++    bool spoof = true;
+ 
+     if (setsockopt(fd, SOL_IPV6, IPV6_FREEBIND,& one, sizeof(one)) < 0) {
+-        close(fd);
+-        logger::error() << "Failed to enable free bind";
+-        return ptr<iface>();
++        if (errno != ENOPROTOOPT)
++        {
++            close(fd);
++            logger::error() << "Failed to enable free bind";
++            return ptr<iface>();
++        }
++        spoof = false;
+     }
+ 
+     // Detect the link-layer address.
+@@ -291,6 +296,7 @@ ptr<iface> iface::open_ifd(const std::string& name)
+     }
+ 
+     ifa->_ifd = fd;
++    ifa->_spoof = spoof;
+ 
+     memcpy(&ifa->hwaddr, ifr.ifr_hwaddr.sa_data, sizeof(struct ether_addr));
+ 
+@@ -476,7 +482,7 @@ ssize_t iface::write_advert(const address& daddr, const address& taddr, bool rou
+     logger::debug() << "iface::write_advert() daddr=" << daddr.to_string()
+                     << ", taddr=" << taddr.to_string();
+ 
+-    return write(_ifd, &taddr, daddr, (uint8_t* )buf, sizeof(struct nd_neighbor_advert) +
++    return write(_ifd, _spoof ? &taddr : NULL, daddr, (uint8_t* )buf, sizeof(struct nd_neighbor_advert) +
+         sizeof(struct nd_opt_hdr) + 6);
+ }
+ 
+diff --git a/src/iface.h b/src/iface.h
+index 58052a06b886..7a791ed84de8 100644
+--- a/src/iface.h
++++ b/src/iface.h
+@@ -94,6 +94,9 @@ private:
+     // NB_NEIGHBOR_SOLICIT messages.
+     int _pfd;
+ 
++    // Can we spoof source IP address when writing NB_NEIGHBOR_ADVERT?
++    bool _spoof;
++
+     // Previous state of ALLMULTI for the interface.
+     int _prev_allmulti;
+ 
+-- 
+2.19.0
+

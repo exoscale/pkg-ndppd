@@ -1,3 +1,9 @@
+ndppd (0.2.5-3+bionic0+exo1) bionic; urgency=medium
+
+  * d/patches: fake source IP address for advertisements.
+
+ -- Vincent Bernat <bernat@debian.org>  Thu, 20 Sep 2018 16:56:01 +0200
+
 ndppd (0.2.5-3) unstable; urgency=medium
 
   * Added dependency on lsb-base, thanks lintian.
